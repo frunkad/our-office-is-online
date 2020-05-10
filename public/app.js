@@ -4,6 +4,19 @@ let isPlaying = false;
 const soundFiles = ["https://firebasestorage.googleapis.com/v0/b/our-office-is-online.appspot.com/o/199896__qubodup__office-ambience.flac?alt=media&token=7196df8a-eca8-4364-82d1-a24f1e29f1ea"];
 const soundFilesFormat = ["flac"]
 let sound;
+let btn;
+let headerText;
+
+const headerTexts = [
+  "Your Co-worker is asking for stapler",
+  "Did you ship to production on Friday?",
+  "HR rejects your raise request with offering an Indian Desert",
+  "Have you prepared that presentation?",
+  "Remember that guy from marketing who was in Drama Society in College?",
+  "Appraisal Season is coming",
+  "Time for tea break",
+  "Among Unrealistic Deadline and Extremely Unrealistic Deadline - which one do you choose?"
+]
 
 
 const registerAudioContext = () => {
@@ -20,6 +33,16 @@ const registerAudioContext = () => {
   }
 };
 
+const startPlayingAction = () => {
+  isPlaying = true;
+  btn.classList.add("paused")
+}
+
+const stopPlayingAction = () => {
+  isPlaying = false;
+  btn.classList.remove("paused");
+}
+
 const configurePlayer = () => {
   sound = new Howl({
     src: soundFiles,
@@ -27,37 +50,41 @@ const configurePlayer = () => {
     loop: true,
     html5: true,
   })
-}
-const startPlaying = () => {
-  sound.play();
-  isPlaying = true;
-}
 
-const stopPlaying = () => {
-  sound.pause();
-  isPlaying = false;
+  sound.on('play', startPlayingAction);
+  sound.on('pause', stopPlayingAction);
 }
 
 const togglePlayer = () => {
   if (isPlaying) {
-    stopPlaying();
+    sound.pause();
   } else {
-    startPlaying();
+    sound.play();
   }
 }
 
 const registerButton = () => {
-  const btn = document.getElementById("button");
+  btn = document.getElementById("button");
   btn.addEventListener("click", () => {
     if (!isAudioContextRegistered) {
       registerAudioContext();
     }
-    btn.classList.toggle("paused");
     togglePlayer();
   });
 };
 
+const headerSwapper = () => {
+  if (isPlaying)
+    headerText.innerText = headerTexts[Math.floor(Math.random() * headerTexts.length)];
+}
+
+const registerHeader = () => {
+  headerText = document.getElementById("header-text");
+  setInterval(headerSwapper, 4000);
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   registerButton();
+  registerHeader();
   // configurePlayer();
 });

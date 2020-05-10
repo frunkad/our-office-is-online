@@ -21,6 +21,7 @@
   .office-header {
     font-family: 'Oswald', sans-serif;
     font-weight: 700;
+    text-align: center;
   }
 
   h1 {
@@ -54,3 +55,6 @@
     border-color: transparent transparent transparent #404040;
   }
   
+  .built-with {
+    width: 124px;
+  }
